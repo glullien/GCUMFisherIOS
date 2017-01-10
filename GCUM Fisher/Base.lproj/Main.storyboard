@@ -67,6 +67,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W6W-jV-XhL">
                                 <rect key="frame" x="16" y="414" width="288" height="30"/>
                                 <state key="normal" title="Envoyez les photos"/>
+                                <connections>
+                                    <action selector="sendPhotosWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CoS-xh-kRt"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XqN-Jf-6lT">
                                 <rect key="frame" x="16" y="388" width="225" height="18"/>

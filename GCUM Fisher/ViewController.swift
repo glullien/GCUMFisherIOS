@@ -44,7 +44,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         geoCoder.reverseGeocodeLocation(userLocation, completionHandler: {
             (placemarks, error) in
             if error != nil {
-                debugPrint("ERROR \(error)") 
+                debugPrint("ERROR \(error)")
             }
             else if let placemark = placemarks?.first {
                 if let postalCodeStr = placemark.postalCode, let postalCode = Int(postalCodeStr), let street = placemark.thoroughfare {
@@ -59,7 +59,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         debugPrint("ERROR \(error)")
     }
-
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -179,7 +179,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             position.text = "..."
         }
-
+        
+    }
+    
+    @IBAction func sendPhotos(sender: UIButton) {
+        if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
+            if photos.count != 0 {
+                DispatchQueue.global().async {
+                    send(address: address, photos: self.photos)
+                }
+            }
+        }
     }
     
 }

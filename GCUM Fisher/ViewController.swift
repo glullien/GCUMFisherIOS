@@ -8,11 +8,15 @@
 
 import UIKit
 import CoreLocation
+import ImageIO
+import AssetsLibrary
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, CLLocationManagerDelegate {
     
     @IBOutlet weak var images : UICollectionView!
     @IBOutlet weak var position : UILabel!
+    @IBOutlet weak var actions : UILabel!
+    @IBOutlet weak var sendButton : UIButton!
     
     var photos = [Photo]()
     var nextId = 0
@@ -95,25 +99,85 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    @IBAction func clearAllPhotos(sender: UIButton) {
-        for  view in images.subviews{
+    private func clearAllPhotos() {
+        for  view in self.images.subviews{
             view.removeFromSuperview()
-            photos.removeAll()
+            self.photos.removeAll()
         }
     }
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
-    {
-        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let photo = Photo(image: chosenImage, id: nextId)
+    @IBAction func clearAllPhotos(sender: UIButton) {
+        let clearAlert = UIAlertController(title: "Retirer toutes les photos", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        clearAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            self.clearAllPhotos()
+        }))
+        clearAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(clearAlert, animated: true, completion: nil)
+    }
+    
+    private func getDate(_ asset: ALAsset?) -> Date {
+        var res = Date()
+        if let metadata = asset!.defaultRepresentation().metadata() {
+            if let exif = metadata["{Exif}"] as? Dictionary<String,Any>{
+                if let dateString = exif["DateTimeOriginal"] as? String {
+                    let formatter = DateFormatter()
+                    formatter.locale = Locale(identifier: "fr_FR")
+                    formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+                    if let date = formatter.date(from: dateString) {
+                        res = date
+                        debugPrint("dateString \(dateString) \(res)")
+                    }
+                }
+            }
+        }
+        return res
+    }
+    
+    private func addPhoto(image: UIImage, date: Date) {
+        let photo = Photo(image: image, date: date, id: nextId)
         nextId += 1
         photos.append(photo)
         images.reloadData()
         dismiss(animated:true, completion: nil)
     }
     
+    private func addPhoto(image: UIImage) {
+        addPhoto(image: image, date: Date())
+    }
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if let chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            let assetsLibrary = ALAssetsLibrary()
+            if let url = info[UIImagePickerControllerReferenceURL] as? URL {
+                assetsLibrary.asset(for: url, resultBlock: {
+                    (asset: ALAsset?) -> Void in
+                    let date = self.getDate(asset)
+                    self.addPhoto(image: chosenImage, date: date)
+                }, failureBlock: {
+                    (error: Error?) -> Void in
+                    self.addPhoto(image: chosenImage)
+                })
+            }
+            else {
+                self.addPhoto(image: chosenImage)
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
+    }
+    
+    private func midnight(_ date: Date) -> Date {
+        let calendar = Calendar.current
+        return calendar.startOfDay(for: date)
+    }
+    
+    private func diffDays(from: Date, to upTo: Date) -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([Calendar.Component.day], from: midnight(from), to: midnight(upTo))
+        return components.day!
     }
     
     internal func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -133,6 +197,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         trashButton.addTarget(self, action: #selector(self.trashPhoto(sender:)), for: .touchUpInside)
         trashButton.frame = CGRect(x: 8, y: 8, width: 53, height: 18)
         cell.addSubview(trashButton)
+        
+        let diff = diffDays(from: photo.date, to: Date())
+        if diff >= 1 {
+            let daysLabel = UILabel()
+            daysLabel.text = diff == 1 ? "1 jour" : "\(diff) jours"
+            daysLabel.textColor = UIColor.red
+            daysLabel.font = UIFont.boldSystemFont(ofSize: 12)
+            daysLabel.frame = CGRect(x: 8, y: 25, width: 53, height: 18)
+            cell.addSubview(daysLabel)
+        }
         
         return cell
     }
@@ -179,14 +253,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             position.text = "..."
         }
-        
     }
     
     @IBAction func sendPhotos(sender: UIButton) {
         if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
             if photos.count != 0 {
-                DispatchQueue.global().async {
-                    send(address: address, photos: self.photos)
+                sendButton.isEnabled = false
+                var finished = false
+                send(address: address, date: Date(), photos: self.photos) {
+                    (type: ProgressType, message: String) in
+                    if !finished {
+                        switch type {
+                        case .Sending:
+                            self.actions.text = message
+                            self.sendButton.isEnabled = false
+                        case .Error:
+                            self.actions.text = " "
+                            self.sendButton.isEnabled = true
+                            finished = true
+                            let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                            successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(successAlert, animated: true, completion: nil)
+                        case .Success:
+                            self.actions.text = " "
+                            self.sendButton.isEnabled = true
+                            finished = true
+                            self.clearAllPhotos()
+                            let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                            successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                            self.present(successAlert, animated: true, completion: nil)
+                        }
+                    }
                 }
             }
         }

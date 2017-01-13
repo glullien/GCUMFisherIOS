@@ -76,4 +76,9 @@ func toStdLowerChars(_ a: String) -> String {
     return toStdChars(a).lowercased()
 }
 
+func firstCharToLowerCase(_ a: String) -> String {
+    let firstChar = a.substring(to: a.index(a.startIndex, offsetBy: 1)).lowercased()
+    return firstChar+a.substring(from: a.index(after: a.startIndex))
+}
+
 

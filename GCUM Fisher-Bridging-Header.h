@@ -5,4 +5,5 @@
 #import "LEOWebDAVClient.h"
 #import "LEOWebDAVPropertyRequest.h"
 #import "LEOWebDAVMakeCollectionRequest.h"
+#import "LEOWebDAVUploadRequest.h"
 #import "LEOWebDAVItem.h"

@@ -58,7 +58,7 @@
                                     <action selector="clearAllPhotosWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="p6M-iL-kYQ"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Actions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwx-Wa-EWv">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwx-Wa-EWv">
                                 <rect key="frame" x="16" y="452" width="288" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -148,8 +148,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="2ps-y9-9KK"/>
                     <connections>
+                        <outlet property="actions" destination="kwx-Wa-EWv" id="LGG-VX-LST"/>
                         <outlet property="images" destination="Sxc-mb-uhg" id="IOJ-a7-kBv"/>
                         <outlet property="position" destination="XqN-Jf-6lT" id="cXk-cG-mXn"/>
+                        <outlet property="sendButton" destination="W6W-jV-XhL" id="0gR-7Y-kgb"/>
                         <segue destination="Equ-ET-EnZ" kind="show" identifier="SetLocation" id="nbn-sV-xzI"/>
                     </connections>
                 </viewController>

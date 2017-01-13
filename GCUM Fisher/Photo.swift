@@ -13,10 +13,12 @@ import UIKit
 struct Photo {
     
     var image: UIImage
+    var date: Date
     var id: Int
     
-    init (image: UIImage, id: Int) {
+    init (image: UIImage, date: Date, id: Int) {
         self.image = image
+        self.date = date
         self.id = id
     }
     

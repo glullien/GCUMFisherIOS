@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class WebDavAccess : NSObject {
     
@@ -21,7 +22,7 @@ class WebDavAccess : NSObject {
         super.init()
     }
     
-    func dir(_ path: String, then: @escaping ([String]) -> Void) {
+    func list(_ path: String, then: @escaping ([String]) -> Void) {
         let res = WebDavDir(access: self, path: path, then: then)
         requests.append(res)
         res.run()
@@ -33,6 +34,18 @@ class WebDavAccess : NSObject {
         res.run()
     }
     
+    func upload(_ path: String, image: UIImage, then: @escaping () -> Void) {
+        if let data = UIImageJPEGRepresentation(image, 0.9) {
+            upload(path, data: data, mimeType: "image/jpeg", then: then)
+        }
+    }
+
+    func upload(_ path: String, data: Data, mimeType: String, then: @escaping () -> Void) {
+        let res = WebDavUpLoad(access: self, path: path, data: data, mimeType: mimeType, then: then)
+        requests.append(res)
+        res.run()
+    }
+
 }
 
 class WebDavDir : NSObject, LEOWebDAVRequestDelegate {
@@ -51,9 +64,7 @@ class WebDavDir : NSObject, LEOWebDAVRequestDelegate {
     }
     
     func run () {
-        debugPrint("Self 1 \(self) - prop.delegate \(prop.delegate)")
         prop.delegate = self
-        debugPrint("Self 2 \(self) - prop.delegate \(prop.delegate)")
         access.client.enqueue(prop)
     }
     
@@ -91,9 +102,39 @@ class WebDavMkDir : NSObject, LEOWebDAVRequestDelegate {
     }
     
     func run () {
-        debugPrint("Self 1 \(self) - prop.delegate \(prop.delegate)")
         prop.delegate = self
-        debugPrint("Self 2 \(self) - prop.delegate \(prop.delegate)")
+        access.client.enqueue(prop)
+    }
+    
+    func request(_ request: LEOWebDAVRequest!, didFailWithError error: Error!) {
+        debugPrint("error \(error)")
+    }
+    
+    func request(_ request: LEOWebDAVRequest!, didSucceedWithResult result: Any!) {
+        debugPrint("success \(result)")
+        then()
+    }
+}
+
+class WebDavUpLoad : NSObject, LEOWebDAVRequestDelegate {
+    
+    let access: WebDavAccess
+    let path: String
+    let prop: LEOWebDAVUploadRequest
+    let then: () -> Void
+    
+    init (access: WebDavAccess, path: String, data: Data, mimeType: String, then: @escaping () -> Void) {
+        self.access = access
+        self.path = path
+        prop = LEOWebDAVUploadRequest(path: path)
+        prop.data = data
+        prop.dataMimeType = mimeType
+        self.then = then
+        super.init()
+    }
+    
+    func run () {
+        prop.delegate = self
         access.client.enqueue(prop)
     }
     

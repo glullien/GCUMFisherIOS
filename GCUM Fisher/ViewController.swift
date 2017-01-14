@@ -260,7 +260,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             if photos.count != 0 {
                 sendButton.isEnabled = false
                 var finished = false
-                send(address: address, date: Date(), photos: self.photos) {
+                send(address: address, photos: self.photos) {
                     (type: ProgressType, message: String) in
                     if !finished {
                         switch type {

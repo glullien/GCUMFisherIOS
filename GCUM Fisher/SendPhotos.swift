@@ -9,18 +9,32 @@
 import Foundation
 
 private extension WebDavAccess{
-    func ensureDir(_ dir: String, inPath: String, then: @escaping () -> Void) {
-        list(inPath) {
-            content in
-            if content.contains(dir) {
-                then()
-            }
-            else {
-                self.mkDir("\(inPath)/\(dir)") {
-                    then()
-                }
+    private func mkDirs (_ dirs: ArraySlice<String>, inPath: String, then: @escaping () -> Void) {
+        if dirs.count == 0 {
+            then()
+        }
+        else {
+            mkDir("\(inPath)/\(dirs[0])") {
+                self.mkDirs(dirs.suffix(from: 1), inPath: inPath, then: then)
             }
         }
+    }
+    
+    func ensureDirs (_ dirs: [String], inPath: String, then: @escaping () -> Void) {
+        list(inPath) {
+            content in
+            var toMake = ArraySlice<String>()
+            for dir in dirs {
+                if (!content.contains(dir)) && (!toMake.contains(dir)) {
+                    toMake.append(dir)
+                }
+            }
+            self.mkDirs(toMake, inPath: inPath, then: then)
+        }
+    }
+    
+    func ensureDir(_ dir: String, inPath: String, then: @escaping () -> Void) {
+        ensureDirs([dir], inPath: inPath, then: then)
     }
 }
 
@@ -55,25 +69,29 @@ enum ProgressType {
     case Success
     case Error}
 
-func send(address: Address, date: Date, photos: [Photo], progress: @escaping (ProgressType, String) -> Void) {
+func send(address: Address, photos: [Photo], progress: @escaping (ProgressType, String) -> Void) {
     DispatchQueue.global().async {
         let districtDir = encode(district: address.district)
         // let districtDir = "111"
         let streetDir = encode(street: address.street)
-        let dateDir = encode(date: date)
+        var dateDirs = [String]()
+        for photo in photos {
+            dateDirs.append(encode(date: photo.date))
+        }
         let access = WebDavAccess()
         DispatchQueue.main.async {
             progress(ProgressType.Sending, "Création des répertoires")
         }
         access.ensureDir (districtDir, inPath: "prefpol/Dossier") {
             access.ensureDir (streetDir, inPath: "prefpol/Dossier/\(districtDir)") {
-                access.ensureDir (dateDir, inPath: "prefpol/Dossier/\(districtDir)/\(streetDir)") {
+                access.ensureDirs (dateDirs, inPath: "prefpol/Dossier/\(districtDir)/\(streetDir)") {
                     var sent = 0
                     DispatchQueue.main.async {
-                        progress(ProgressType.Sending, "Envoi des fichiers \(sent)\(photos.count)")
+                        progress(ProgressType.Sending, "Envoi des fichiers \(sent) / \(photos.count)")
                     }
                     for photo in photos {
                         let uniqueId = arc4random_uniform(10000000)
+                        let dateDir = encode(date: photo.date)
                         access.upload( "prefpol/Dossier/\(districtDir)/\(streetDir)/\(dateDir)/gcum\(uniqueId).jpg", image: photo.image, then: {
                             DispatchQueue.main.async {
                                 sent += 1
@@ -81,7 +99,7 @@ func send(address: Address, date: Date, photos: [Photo], progress: @escaping (Pr
                                     progress(ProgressType.Success, "Fichiers envoyés")
                                 }
                                 else {
-                                    progress(ProgressType.Sending, "Envoi des fichiers \(sent)/\(photos.count)")
+                                    progress(ProgressType.Sending, "Envoi des fichiers \(sent) / \(photos.count)")
                                 }
                             }
                          })

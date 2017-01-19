@@ -184,6 +184,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated:true, completion: nil)  
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
     }
@@ -236,7 +240,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         images.reloadData()
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    @IBAction func disconnect (sender: UIButton) {
+        if getCredentials() == nil {
+            performSegue(withIdentifier: "Login", sender: nil)
+        }
+        else {
+            let disconnectAlert = UIAlertController(title: "Déconnecter", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+            disconnectAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+                removeCredentials()
+                self.updateSendButton()
+            }))
+            disconnectAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            present(disconnectAlert, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func openSettings (sender: UIButton) {
     }
     
     @IBAction func forceAddress(sender: UIButton) {

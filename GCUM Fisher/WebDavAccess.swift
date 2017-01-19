@@ -25,6 +25,13 @@ func saveCredentials (_ credentials: Credentials) {
     defaults.synchronize()
 }
 
+func removeCredentials () {
+    let defaults = UserDefaults.standard
+    defaults.removeObject(forKey: "userName")
+    defaults.removeObject(forKey: "password")
+    defaults.synchronize()
+}
+
 func getCredentials () -> Credentials? {
     let defaults = UserDefaults.standard
     if let userName = defaults.string(forKey: "userName"), let password = defaults.string(forKey: "password") {

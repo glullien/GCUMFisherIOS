@@ -37,6 +37,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         locationManager.startUpdatingLocation()
         
         geoCoder = CLGeocoder()
+        
+        updateSendButton()
+        
+    }
+    
+    func updateSendButton() {
+        if getCredentials() == nil {
+            sendButton.isEnabled = true
+            sendButton.setTitle("Se connecter", for: UIControlState.normal)
+        }
+        else {
+            sendButton.isEnabled = ((forcedAddress != nil) || (gpsAddress != nil)) && (photos.count != 0)
+            sendButton.setTitle("Envoyez les photos", for: UIControlState.normal)
+        }
     }
     
     override func viewWillAppear (_ animated: Bool) {
@@ -47,8 +61,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let userLocation = locations[0]
         geoCoder.reverseGeocodeLocation(userLocation, completionHandler: {
             (placemarks, error) in
-            if error != nil {
-                debugPrint("ERROR \(error)")
+            if let e = error {
+                self.setGpsErrorMessage (e.localizedDescription)
             }
             else if let placemark = placemarks?.first {
                 if let postalCodeStr = placemark.postalCode, let postalCode = Int(postalCodeStr), let street = placemark.thoroughfare {
@@ -56,14 +70,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                     let address = Address (street: street, district: district)
                     self.setGPS (address)
                 }
+                else {
+                    self.setGpsErrorMessage("Aucune rue à proximité")
+                    self.updatePositionText()
+                    self.updateSendButton()
+                }
             }
         })
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        debugPrint("ERROR \(error)")
+        setGpsErrorMessage (error.localizedDescription)
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -139,6 +157,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         photos.append(photo)
         images.reloadData()
         dismiss(animated:true, completion: nil)
+        updateSendButton()
     }
     
     private func addPhoto(image: UIImage) {
@@ -227,65 +246,89 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             forcedAddress = nil
             updatePositionText()
+            updateSendButton()
         }
     }
     
     var gpsAddress: Address?
     var forcedAddress: Address?
+    var gpsError: String?
+    
+    func setGpsErrorMessage(_ error: String){
+        gpsError = error
+        gpsAddress = nil
+        updatePositionText()
+        updateSendButton()
+    }
     
     func setGPS(_ address: Address) {
+        gpsError = nil
         gpsAddress = address
         updatePositionText()
+        updateSendButton()
     }
     
     func forceAddress(_ address: Address) {
         forcedAddress = address
         updatePositionText()
+        updateSendButton()
     }
     
     func updatePositionText() {
         if let forcedAddress = self.forcedAddress {
             position.text = forcedAddress.fullName()
+            position.textColor = UIColor.black
         }
         else if let gpsAddress = self.gpsAddress {
             position.text = gpsAddress.fullName()
+            position.textColor = UIColor.black
+        }
+        else if let gpsError = self.gpsError {
+            position.text = gpsError
+            position.textColor = UIColor.red
         }
         else {
             position.text = "..."
+            position.textColor = UIColor.black
         }
     }
     
     @IBAction func sendPhotos(sender: UIButton) {
-        if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
-            if photos.count != 0 {
-                sendButton.isEnabled = false
-                var finished = false
-                send(address: address, photos: self.photos) {
-                    (type: ProgressType, message: String) in
-                    if !finished {
-                        switch type {
-                        case .Sending:
-                            self.actions.text = message
-                            self.sendButton.isEnabled = false
-                        case .Error:
-                            self.actions.text = " "
-                            self.sendButton.isEnabled = true
-                            finished = true
-                            let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                            successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                            self.present(successAlert, animated: true, completion: nil)
-                        case .Success:
-                            self.actions.text = " "
-                            self.sendButton.isEnabled = true
-                            finished = true
-                            self.clearAllPhotos()
-                            let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
-                            successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                            self.present(successAlert, animated: true, completion: nil)
+        if let credentials = getCredentials() {
+            if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
+                if photos.count != 0 {
+                    sendButton.isEnabled = false
+                    var finished = false
+                    send(credentials: credentials, address: address, photos: self.photos) {
+                        (type: ProgressType, message: String) in
+                        if !finished {
+                            switch type {
+                            case .Sending:
+                                self.actions.text = message
+                                self.sendButton.isEnabled = false
+                            case .Error:
+                                self.actions.text = " "
+                                self.sendButton.isEnabled = true
+                                finished = true
+                                let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                                successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                                self.present(successAlert, animated: true, completion: nil)
+                            case .Success:
+                                self.actions.text = " "
+                                self.sendButton.isEnabled = true
+                                finished = true
+                                self.clearAllPhotos()
+                                let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
+                                successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                                self.present(successAlert, animated: true, completion: nil)
+                            }
                         }
                     }
                 }
             }
+        }
+        else {
+            performSegue(withIdentifier: "Login", sender: nil)
         }
     }
     

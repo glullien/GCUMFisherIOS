@@ -69,7 +69,7 @@ enum ProgressType {
     case Success
     case Error}
 
-func send(address: Address, photos: [Photo], progress: @escaping (ProgressType, String) -> Void) {
+func send(credentials: Credentials, address: Address, photos: [Photo], progress: @escaping (ProgressType, String) -> Void) {
     DispatchQueue.global().async {
         let districtDir = encode(district: address.district)
         // let districtDir = "111"
@@ -78,7 +78,10 @@ func send(address: Address, photos: [Photo], progress: @escaping (ProgressType, 
         for photo in photos {
             dateDirs.append(encode(date: photo.date))
         }
-        let access = WebDavAccess()
+        let access = WebDavAccess(credentials: credentials, error: {
+            error in
+            progress(ProgressType.Error, error.localizedDescription)
+        })
         DispatchQueue.main.async {
             progress(ProgressType.Sending, "Création des répertoires")
         }

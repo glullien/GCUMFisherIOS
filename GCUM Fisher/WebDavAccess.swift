@@ -9,16 +9,44 @@
 import Foundation
 import UIKit
 
+struct Credentials {
+    let userName: String
+    let password: String
+    init (userName: String, password: String) {
+        self.userName = userName
+        self.password = password
+    }
+}
+
+func saveCredentials (_ credentials: Credentials) {
+    let defaults = UserDefaults.standard
+    defaults.setValue(credentials.userName, forKey: "userName")
+    defaults.setValue(credentials.password, forKey: "password")
+    defaults.synchronize()
+}
+
+func getCredentials () -> Credentials? {
+    let defaults = UserDefaults.standard
+    if let userName = defaults.string(forKey: "userName"), let password = defaults.string(forKey: "password") {
+        return Credentials(userName: userName, password: password)
+    }
+    else {
+        return nil
+    }
+}
+
 class WebDavAccess : NSObject {
     
     let client: LEOWebDAVClient
     let site = "https://cloud.debian-economist.eu"
     let root = "/remote.php/webdav/"
+    let error: (Error) -> Void
     var requests = [LEOWebDAVRequestDelegate]()
     
-    override init() {
+    init(credentials: Credentials, error: @escaping (Error) -> Void) {
         let url = URL(string: "\(site)\(root)")
-        client = LEOWebDAVClient(rootURL: url, andUserName: "Gurvan", andPassword: "Web/Dav12")
+        client = LEOWebDAVClient(rootURL: url, andUserName: credentials.userName, andPassword: credentials.password)
+        self.error = error
         super.init()
     }
     
@@ -70,6 +98,7 @@ class WebDavDir : NSObject, LEOWebDAVRequestDelegate {
     
     func request(_ request: LEOWebDAVRequest!, didFailWithError error: Error!) {
         debugPrint("error \(error)")
+        access.error(error)
     }
     
     func request(_ request: LEOWebDAVRequest!, didSucceedWithResult result: Any!) {
@@ -108,7 +137,8 @@ class WebDavMkDir : NSObject, LEOWebDAVRequestDelegate {
     
     func request(_ request: LEOWebDAVRequest!, didFailWithError error: Error!) {
         debugPrint("error \(error)")
-    }
+        access.error(error)
+  }
     
     func request(_ request: LEOWebDAVRequest!, didSucceedWithResult result: Any!) {
         debugPrint("success \(result)")
@@ -140,6 +170,7 @@ class WebDavUpLoad : NSObject, LEOWebDAVRequestDelegate {
     
     func request(_ request: LEOWebDAVRequest!, didFailWithError error: Error!) {
         debugPrint("error \(error)")
+        access.error(error)
     }
     
     func request(_ request: LEOWebDAVRequest!, didSucceedWithResult result: Any!) {

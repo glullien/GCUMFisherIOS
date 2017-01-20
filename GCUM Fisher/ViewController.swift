@@ -48,7 +48,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             sendButton.setTitle("Se connecter", for: UIControlState.normal)
         }
         else {
-            sendButton.isEnabled = ((forcedAddress != nil) || (gpsAddress != nil)) && (photos.count != 0)
+            sendButton.isEnabled = ((forcedAddress != nil) || (gpsAddress != nil)) && (photos.count != 0) && !sending
             sendButton.setTitle("Envoyez les photos", for: UIControlState.normal)
         }
     }
@@ -314,11 +314,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    var sending = false
+    
     @IBAction func sendPhotos(sender: UIButton) {
         if let credentials = getCredentials() {
             if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
                 if photos.count != 0 {
-                    sendButton.isEnabled = false
+                    sending = true
+                    updateSendButton()
                     var finished = false
                     send(credentials: credentials, address: address, photos: self.photos) {
                         (type: ProgressType, message: String) in
@@ -329,14 +332,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                                 self.sendButton.isEnabled = false
                             case .Error:
                                 self.actions.text = " "
-                                self.sendButton.isEnabled = true
+                                self.sending = false
+                                self.updateSendButton()
                                 finished = true
                                 let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)
                                 successAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                                 self.present(successAlert, animated: true, completion: nil)
                             case .Success:
                                 self.actions.text = " "
-                                self.sendButton.isEnabled = true
+                                self.sending = false
+                                self.updateSendButton()
                                 finished = true
                                 self.clearAllPhotos()
                                 let successAlert = UIAlertController(title: message, message: nil, preferredStyle: UIAlertControllerStyle.alert)

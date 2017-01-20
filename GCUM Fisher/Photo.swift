@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+let imageSizes = [ImageSize.Small: 400, ImageSize.Medium: 800, ImageSize.Maximal:Int.max]
 
 struct Photo {
     
@@ -20,6 +21,38 @@ struct Photo {
         self.image = image
         self.date = date
         self.id = id
+    }
+    
+    func getImage(width: Double, height: Double) -> UIImage {
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: height)))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = image
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, 1)
+        let context = UIGraphicsGetCurrentContext()!
+        imageView.layer.render(in: context)
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    func getImage(maxSize: Double) -> UIImage {
+        let width = Double(image.size.width)
+        let height = Double(image.size.height)
+        if (width <= maxSize) && (height <= maxSize) {
+            return image
+        }
+        else if width <= height {
+            return getImage (width: width*maxSize/height, height: maxSize)
+        }
+        else {
+            return getImage (width: width*maxSize/height, height: maxSize)
+        }
+    }
+    
+    func getData(size: ImageSize, quality: Int) -> Data {
+        let maxSize = Double(imageSizes[size]!)
+        let quality = CGFloat(Double(quality)/100.0)
+        return UIImageJPEGRepresentation(getImage(maxSize: maxSize), quality)!
     }
     
 }

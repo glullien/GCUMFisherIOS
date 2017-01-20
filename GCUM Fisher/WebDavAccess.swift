@@ -74,7 +74,7 @@ class WebDavAccess : NSObject {
             upload(path, data: data, mimeType: "image/jpeg", then: then)
         }
     }
-
+    
     func upload(_ path: String, data: Data, mimeType: String, then: @escaping () -> Void) {
         let res = WebDavUpLoad(access: self, path: path, data: data, mimeType: mimeType, then: then)
         requests.append(res)

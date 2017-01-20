@@ -199,6 +199,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     private func diffDays(from: Date, to upTo: Date) -> Int {
         let calendar = Calendar.current
+        debugPrint("diff between \(midnight(from)) \(midnight(upTo))")
         let components = calendar.dateComponents([Calendar.Component.day], from: midnight(from), to: midnight(upTo))
         return components.day!
     }
@@ -256,7 +257,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func openSettings (sender: UIButton) {
-    }
+        performSegue(withIdentifier: "Settings", sender: nil)
+ }
     
     @IBAction func forceAddress(sender: UIButton) {
         if forcedAddress == nil {

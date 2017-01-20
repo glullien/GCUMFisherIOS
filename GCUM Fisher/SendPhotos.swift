@@ -8,6 +8,38 @@
 
 import Foundation
 
+enum ImageSize: String {
+    case Small = "small"
+    case Medium = "medium"
+    case Maximal = "maximal"
+}
+
+func saveImageSize (_ size: ImageSize) {
+    let defaults = UserDefaults.standard
+    defaults.setValue(size.rawValue, forKey: "imageSize")
+    defaults.synchronize()
+}
+
+func getImageSize () -> ImageSize {
+    if let size = UserDefaults.standard.string(forKey: "imageSize") {
+        return ImageSize(rawValue: size)!
+    }
+    else {
+        return ImageSize.Maximal
+    }
+}
+
+func saveImageQuality (_ quality: Int) {
+    let defaults = UserDefaults.standard
+    defaults.setValue(quality, forKey: "imageQuality")
+    defaults.synchronize()
+}
+
+func getImageQuality () -> Int {
+    let quality = UserDefaults.standard.integer(forKey: "imageQuality")
+    return quality > 0 ? quality : 95
+}
+
 private extension WebDavAccess{
     private func mkDirs (_ dirs: ArraySlice<String>, inPath: String, then: @escaping () -> Void) {
         if dirs.count == 0 {
@@ -93,9 +125,10 @@ func send(credentials: Credentials, address: Address, photos: [Photo], progress:
                         progress(ProgressType.Sending, "Envoi des fichiers \(sent) / \(photos.count)")
                     }
                     for photo in photos {
+                        let data = photo.getData (size: getImageSize(), quality: getImageQuality())
                         let uniqueId = arc4random_uniform(10000000)
                         let dateDir = encode(date: photo.date)
-                        access.upload( "prefpol/Dossier/\(districtDir)/\(streetDir)/\(dateDir)/gcum\(uniqueId).jpg", image: photo.image, then: {
+                        access.upload( "prefpol/Dossier/\(districtDir)/\(streetDir)/\(dateDir)/gcum\(uniqueId).jpg", data: data, mimeType: "image/jpeg", then: {
                             DispatchQueue.main.async {
                                 sent += 1
                                 if sent == photos.count {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7B0655671E2F962600E6E072 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0655661E2F962600E6E072 /* LoginViewController.swift */; };
+		7B0655691E31043A00E6E072 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0655681E31043A00E6E072 /* SettingsViewController.swift */; };
 		7B27235F1E1E59F1009B7FA2 /* streets.csv in Resources */ = {isa = PBXBuildFile; fileRef = 7B27235E1E1E59F1009B7FA2 /* streets.csv */; };
 		7B2723611E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2723601E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift */; };
 		7B317B571DF8C09200AE1CEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B317B561DF8C09200AE1CEC /* AppDelegate.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		7B0655661E2F962600E6E072 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7B0655681E31043A00E6E072 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		7B27235E1E1E59F1009B7FA2 /* streets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = streets.csv; sourceTree = "<group>"; };
 		7B2723601E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestOpenDataParisFr.swift; sourceTree = "<group>"; };
 		7B317B531DF8C09200AE1CEC /* GCUM Fisher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GCUM Fisher.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +140,7 @@
 				7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */,
 				7B36AB351E258CE0000FF8F0 /* SendPhotos.swift */,
 				7B0655661E2F962600E6E072 /* LoginViewController.swift */,
+				7B0655681E31043A00E6E072 /* SettingsViewController.swift */,
 			);
 			path = "GCUM Fisher";
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				7BC98F861E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m in Sources */,
 				7B0655671E2F962600E6E072 /* LoginViewController.swift in Sources */,
 				7BC98F871E22E7A40039B1E6 /* LEOWebDAVURL.m in Sources */,
+				7B0655691E31043A00E6E072 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,22 +21,6 @@
 		7B5760F11E1DACE1004452FD /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5760F01E1DACE1004452FD /* Address.swift */; };
 		7B5760F51E1DB335004452FD /* SetLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5760F41E1DB335004452FD /* SetLocationViewController.swift */; };
 		7B5B6A001E1D9D32001CB79F /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5B69FF1E1D9D32001CB79F /* Photo.swift */; };
-		7BC98F7A1E22E7A40039B1E6 /* LEOContentTypeConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F5C1E22E7A40039B1E6 /* LEOContentTypeConvert.m */; };
-		7BC98F7B1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F5E1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.m */; };
-		7BC98F7C1E22E7A40039B1E6 /* LEOWebDAVClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F601E22E7A40039B1E6 /* LEOWebDAVClient.m */; };
-		7BC98F7D1E22E7A40039B1E6 /* LEOWebDAVCopyRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F621E22E7A40039B1E6 /* LEOWebDAVCopyRequest.m */; };
-		7BC98F7E1E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F651E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m */; };
-		7BC98F7F1E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F671E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.m */; };
-		7BC98F801E22E7A40039B1E6 /* LEOWebDAVItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F691E22E7A40039B1E6 /* LEOWebDAVItem.m */; };
-		7BC98F811E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F6B1E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.m */; };
-		7BC98F821E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F6D1E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m */; };
-		7BC98F831E22E7A40039B1E6 /* LEOWebDAVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F6F1E22E7A40039B1E6 /* LEOWebDAVParser.m */; };
-		7BC98F841E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F711E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.m */; };
-		7BC98F851E22E7A40039B1E6 /* LEOWebDAVRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F731E22E7A40039B1E6 /* LEOWebDAVRequest.m */; };
-		7BC98F861E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F751E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m */; };
-		7BC98F871E22E7A40039B1E6 /* LEOWebDAVURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F771E22E7A40039B1E6 /* LEOWebDAVURL.m */; };
-		7BC98F881E22E7A40039B1E6 /* LEOWebDAVUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F791E22E7A40039B1E6 /* LEOWebDAVUtility.m */; };
-		7BC98F8A1E22E85C0039B1E6 /* WebDavAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */; };
 		7BCF65B21E2026B5009398E2 /* Chars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCF65B11E2026B5009398E2 /* Chars.swift */; };
 		7BF2E8791E856C85001A6A60 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF2E8781E856C85001A6A60 /* Server.swift */; };
 /* End PBXBuildFile section */
@@ -58,39 +42,6 @@
 		7B5760F01E1DACE1004452FD /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		7B5760F41E1DB335004452FD /* SetLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetLocationViewController.swift; sourceTree = "<group>"; };
 		7B5B69FF1E1D9D32001CB79F /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
-		7BC98F5A1E22E7A30039B1E6 /* GCUM Fisher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GCUM Fisher-Bridging-Header.h"; sourceTree = "<group>"; };
-		7BC98F5B1E22E7A40039B1E6 /* LEOContentTypeConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOContentTypeConvert.h; sourceTree = "<group>"; };
-		7BC98F5C1E22E7A40039B1E6 /* LEOContentTypeConvert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOContentTypeConvert.m; sourceTree = "<group>"; };
-		7BC98F5D1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVBaseRequest.h; sourceTree = "<group>"; };
-		7BC98F5E1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVBaseRequest.m; sourceTree = "<group>"; };
-		7BC98F5F1E22E7A40039B1E6 /* LEOWebDAVClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVClient.h; sourceTree = "<group>"; };
-		7BC98F601E22E7A40039B1E6 /* LEOWebDAVClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVClient.m; sourceTree = "<group>"; };
-		7BC98F611E22E7A40039B1E6 /* LEOWebDAVCopyRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVCopyRequest.h; sourceTree = "<group>"; };
-		7BC98F621E22E7A40039B1E6 /* LEOWebDAVCopyRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVCopyRequest.m; sourceTree = "<group>"; };
-		7BC98F631E22E7A40039B1E6 /* LEOWebDAVDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVDefines.h; sourceTree = "<group>"; };
-		7BC98F641E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVDeleteRequest.h; sourceTree = "<group>"; };
-		7BC98F651E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVDeleteRequest.m; sourceTree = "<group>"; };
-		7BC98F661E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVDownloadRequest.h; sourceTree = "<group>"; };
-		7BC98F671E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVDownloadRequest.m; sourceTree = "<group>"; };
-		7BC98F681E22E7A40039B1E6 /* LEOWebDAVItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVItem.h; sourceTree = "<group>"; };
-		7BC98F691E22E7A40039B1E6 /* LEOWebDAVItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVItem.m; sourceTree = "<group>"; };
-		7BC98F6A1E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVMakeCollectionRequest.h; sourceTree = "<group>"; };
-		7BC98F6B1E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVMakeCollectionRequest.m; sourceTree = "<group>"; };
-		7BC98F6C1E22E7A40039B1E6 /* LEOWebDAVMoveRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVMoveRequest.h; sourceTree = "<group>"; };
-		7BC98F6D1E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVMoveRequest.m; sourceTree = "<group>"; };
-		7BC98F6E1E22E7A40039B1E6 /* LEOWebDAVParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVParser.h; sourceTree = "<group>"; };
-		7BC98F6F1E22E7A40039B1E6 /* LEOWebDAVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVParser.m; sourceTree = "<group>"; };
-		7BC98F701E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVPropertyRequest.h; sourceTree = "<group>"; };
-		7BC98F711E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVPropertyRequest.m; sourceTree = "<group>"; };
-		7BC98F721E22E7A40039B1E6 /* LEOWebDAVRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVRequest.h; sourceTree = "<group>"; };
-		7BC98F731E22E7A40039B1E6 /* LEOWebDAVRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVRequest.m; sourceTree = "<group>"; };
-		7BC98F741E22E7A40039B1E6 /* LEOWebDAVUploadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVUploadRequest.h; sourceTree = "<group>"; };
-		7BC98F751E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVUploadRequest.m; sourceTree = "<group>"; };
-		7BC98F761E22E7A40039B1E6 /* LEOWebDAVURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVURL.h; sourceTree = "<group>"; };
-		7BC98F771E22E7A40039B1E6 /* LEOWebDAVURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVURL.m; sourceTree = "<group>"; };
-		7BC98F781E22E7A40039B1E6 /* LEOWebDAVUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LEOWebDAVUtility.h; sourceTree = "<group>"; };
-		7BC98F791E22E7A40039B1E6 /* LEOWebDAVUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVUtility.m; sourceTree = "<group>"; };
-		7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavAccess.swift; sourceTree = "<group>"; };
 		7BCF65B11E2026B5009398E2 /* Chars.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chars.swift; sourceTree = "<group>"; };
 		7BF2E8781E856C85001A6A60 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,7 +60,6 @@
 		7B317B4A1DF8C09200AE1CEC = {
 			isa = PBXGroup;
 			children = (
-				7BC98F591E22E7780039B1E6 /* LEOWebDAV */,
 				7B317B551DF8C09200AE1CEC /* GCUM Fisher */,
 				7B317B541DF8C09200AE1CEC /* Products */,
 			);
@@ -139,52 +89,12 @@
 				7B5760F41E1DB335004452FD /* SetLocationViewController.swift */,
 				7B2723601E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift */,
 				7BCF65B11E2026B5009398E2 /* Chars.swift */,
-				7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */,
 				7B36AB351E258CE0000FF8F0 /* SendPhotos.swift */,
 				7B0655661E2F962600E6E072 /* LoginViewController.swift */,
 				7B0655681E31043A00E6E072 /* SettingsViewController.swift */,
 				7BF2E8781E856C85001A6A60 /* Server.swift */,
 			);
 			path = "GCUM Fisher";
-			sourceTree = "<group>";
-		};
-		7BC98F591E22E7780039B1E6 /* LEOWebDAV */ = {
-			isa = PBXGroup;
-			children = (
-				7BC98F5B1E22E7A40039B1E6 /* LEOContentTypeConvert.h */,
-				7BC98F5C1E22E7A40039B1E6 /* LEOContentTypeConvert.m */,
-				7BC98F5D1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.h */,
-				7BC98F5E1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.m */,
-				7BC98F5F1E22E7A40039B1E6 /* LEOWebDAVClient.h */,
-				7BC98F601E22E7A40039B1E6 /* LEOWebDAVClient.m */,
-				7BC98F611E22E7A40039B1E6 /* LEOWebDAVCopyRequest.h */,
-				7BC98F621E22E7A40039B1E6 /* LEOWebDAVCopyRequest.m */,
-				7BC98F631E22E7A40039B1E6 /* LEOWebDAVDefines.h */,
-				7BC98F641E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.h */,
-				7BC98F651E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m */,
-				7BC98F661E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.h */,
-				7BC98F671E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.m */,
-				7BC98F681E22E7A40039B1E6 /* LEOWebDAVItem.h */,
-				7BC98F691E22E7A40039B1E6 /* LEOWebDAVItem.m */,
-				7BC98F6A1E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.h */,
-				7BC98F6B1E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.m */,
-				7BC98F6C1E22E7A40039B1E6 /* LEOWebDAVMoveRequest.h */,
-				7BC98F6D1E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m */,
-				7BC98F6E1E22E7A40039B1E6 /* LEOWebDAVParser.h */,
-				7BC98F6F1E22E7A40039B1E6 /* LEOWebDAVParser.m */,
-				7BC98F701E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.h */,
-				7BC98F711E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.m */,
-				7BC98F721E22E7A40039B1E6 /* LEOWebDAVRequest.h */,
-				7BC98F731E22E7A40039B1E6 /* LEOWebDAVRequest.m */,
-				7BC98F741E22E7A40039B1E6 /* LEOWebDAVUploadRequest.h */,
-				7BC98F751E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m */,
-				7BC98F761E22E7A40039B1E6 /* LEOWebDAVURL.h */,
-				7BC98F771E22E7A40039B1E6 /* LEOWebDAVURL.m */,
-				7BC98F781E22E7A40039B1E6 /* LEOWebDAVUtility.h */,
-				7BC98F791E22E7A40039B1E6 /* LEOWebDAVUtility.m */,
-				7BC98F5A1E22E7A30039B1E6 /* GCUM Fisher-Bridging-Header.h */,
-			);
-			name = LEOWebDAV;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,29 +176,13 @@
 				7B317B691DFA15E700AE1CEC /* ImageCollectionViewCell.swift in Sources */,
 				7B2723611E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift in Sources */,
 				7B317B591DF8C09200AE1CEC /* ViewController.swift in Sources */,
-				7BC98F7B1E22E7A40039B1E6 /* LEOWebDAVBaseRequest.m in Sources */,
 				7B317B571DF8C09200AE1CEC /* AppDelegate.swift in Sources */,
-				7BC98F7D1E22E7A40039B1E6 /* LEOWebDAVCopyRequest.m in Sources */,
-				7BC98F7F1E22E7A40039B1E6 /* LEOWebDAVDownloadRequest.m in Sources */,
 				7B5760F51E1DB335004452FD /* SetLocationViewController.swift in Sources */,
-				7BC98F7A1E22E7A40039B1E6 /* LEOContentTypeConvert.m in Sources */,
-				7BC98F801E22E7A40039B1E6 /* LEOWebDAVItem.m in Sources */,
 				7B5760F11E1DACE1004452FD /* Address.swift in Sources */,
-				7BC98F821E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m in Sources */,
-				7BC98F7E1E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m in Sources */,
 				7BF2E8791E856C85001A6A60 /* Server.swift in Sources */,
-				7BC98F831E22E7A40039B1E6 /* LEOWebDAVParser.m in Sources */,
-				7BC98F881E22E7A40039B1E6 /* LEOWebDAVUtility.m in Sources */,
-				7BC98F8A1E22E85C0039B1E6 /* WebDavAccess.swift in Sources */,
-				7BC98F851E22E7A40039B1E6 /* LEOWebDAVRequest.m in Sources */,
-				7BC98F7C1E22E7A40039B1E6 /* LEOWebDAVClient.m in Sources */,
-				7BC98F841E22E7A40039B1E6 /* LEOWebDAVPropertyRequest.m in Sources */,
-				7BC98F811E22E7A40039B1E6 /* LEOWebDAVMakeCollectionRequest.m in Sources */,
 				7BCF65B21E2026B5009398E2 /* Chars.swift in Sources */,
 				7B36AB361E258CE0000FF8F0 /* SendPhotos.swift in Sources */,
-				7BC98F861E22E7A40039B1E6 /* LEOWebDAVUploadRequest.m in Sources */,
 				7B0655671E2F962600E6E072 /* LoginViewController.swift in Sources */,
-				7BC98F871E22E7A40039B1E6 /* LEOWebDAVURL.m in Sources */,
 				7B0655691E31043A00E6E072 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,7 +314,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "glullien.fr.GCUM-Fisher";
 				PRODUCT_NAME = "Paris parking";
-				SWIFT_OBJC_BRIDGING_HEADER = "GCUM Fisher-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -436,7 +330,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "glullien.fr.GCUM-Fisher";
 				PRODUCT_NAME = "Paris parking";
-				SWIFT_OBJC_BRIDGING_HEADER = "GCUM Fisher-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

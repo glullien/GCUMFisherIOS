@@ -262,7 +262,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             let disconnectAlert = UIAlertController(title: "Déconnecter", message: nil, preferredStyle: UIAlertControllerStyle.alert)
             disconnectAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-                removeCredentials()
+                removeAutoLogin()
                 self.updateSendButton()
             }))
             disconnectAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

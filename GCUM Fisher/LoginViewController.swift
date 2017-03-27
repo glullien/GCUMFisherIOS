@@ -41,26 +41,19 @@ class LoginViewController : UIViewController, UITextFieldDelegate {
     }
     
     func testConnection () {
-        progressField.text = "Test de la connection"
         if let username = userNameField.text, let password = passwordField.text {
-            let credentials = Credentials(userName: username, password: password)
-            DispatchQueue.global().async {
-                let access = WebDavAccess(credentials: credentials, error: {
-                    error in
-                    self.progressField.text = "Mauvais identifiants"
-                })
-                access.list("") {
-                    content in
-                    DispatchQueue.main.async {
-                        if content.contains ("prefpol") {
-                            saveCredentials(credentials)
-                            self.navigationController!.popViewController(animated: true)
-                            let previousViewController = self.navigationController?.viewControllers.last as! ViewController
-                            previousViewController.updateSendButton()
-                        }
-                        else {
-                            self.progressField.text = "Utilisateur mal configuré"
-                        }
+            if ((username.characters.count != 0) && (password.characters.count != 0)){
+                progressField.text = "Test de la connection"
+                getAutoLogin(username: username, password: password) {
+                    (autoLogin, error) in
+                    if let error = error {
+                        self.progressField.text = error
+                    }
+                    else {
+                        saveAutoLogin(autoLogin!)
+                        self.navigationController!.popViewController(animated: true)
+                        let previousViewController = self.navigationController?.viewControllers.last as! ViewController
+                        previousViewController.updateSendButton()
                     }
                 }
             }

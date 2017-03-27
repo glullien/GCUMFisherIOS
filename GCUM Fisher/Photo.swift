@@ -16,11 +16,13 @@ struct Photo {
     var image: UIImage
     var date: Date
     var id: Int
+    var point: Point?
     
-    init (image: UIImage, date: Date, id: Int) {
+    init (image: UIImage, date: Date, id: Int, point: Point? = nil) {
         self.image = image
         self.date = date
         self.id = id
+        self.point = point
     }
     
     func getImage(width: Double, height: Double) -> UIImage {

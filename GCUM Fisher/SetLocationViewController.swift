@@ -40,7 +40,18 @@ class SetLocationViewController : UIViewController, UITableViewDelegate, UITable
             self.resultsView.reloadData()
         }
         else {
-            let newCancelFlag = OpenParisStreetsCancelFlag()
+            searchAddress(pattern: pattern, nb: 10) {
+                (addresses, error) in
+                if let error = error {
+                    self.results = [Address]()
+                    self.resultsView.reloadData()
+                }
+                else if let addresses = addresses {
+                    self.results = addresses
+                    self.resultsView.reloadData()
+                }
+            }
+            /*let newCancelFlag = OpenParisStreetsCancelFlag()
             cancelFlag = newCancelFlag
             DispatchQueue.global().async {
                 searchOpenParisStreets(for: pattern, handler: {
@@ -50,7 +61,7 @@ class SetLocationViewController : UIViewController, UITableViewDelegate, UITable
                         self.resultsView.reloadData()
                     }
                 }, cancelFlag: newCancelFlag)
-            }
+            }*/
         }
     }
     

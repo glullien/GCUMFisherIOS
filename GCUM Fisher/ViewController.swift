@@ -43,7 +43,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func updateSendButton() {
-        if getCredentials() == nil {
+        if getAutoLogin() == nil {
             sendButton.isEnabled = true
             sendButton.setTitle("Se connecter", for: UIControlState.normal)
         }
@@ -54,29 +54,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     override func viewWillAppear (_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        //navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [  CLLocation ]) {
         let userLocation = locations[0]
-        geoCoder.reverseGeocodeLocation(userLocation, completionHandler: {
-            (placemarks, error) in
-            if let e = error {
-                self.setGpsErrorMessage (e.localizedDescription)
-            }
-            else if let placemark = placemarks?.first {
-                if let postalCodeStr = placemark.postalCode, let postalCode = Int(postalCodeStr), let street = placemark.thoroughfare {
-                    let district = postalCode-75000
-                    let address = Address (street: street, district: district)
-                    self.setGPS (address)
+        let latitude = Int(Double(userLocation.coordinate.latitude*1E5))
+        let longitude = Int(Double(userLocation.coordinate.longitude*1E5))
+        let newLocation = Point(latitude: latitude, longitude: longitude)
+        let distanceMoved = location?.distance(from: newLocation) ?? Int.max
+        location = newLocation
+        
+        if distanceMoved > 3 {
+            searchClosest(latitude: latitude, longitude: longitude, nb: 3) {
+                (addresses, error) in
+                if let error = error {
+                    self.setGpsErrorMessage(error)
                 }
-                else {
-                    self.setGpsErrorMessage("Aucune rue à proximité")
-                    self.updatePositionText()
-                    self.updateSendButton()
+                else if let addresses = addresses {
+                    self.setGPS (addresses[0])
                 }
             }
-        })
+        }
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -151,8 +150,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return res
     }
     
-    private func addPhoto(image: UIImage, date: Date) {
-        let photo = Photo(image: image, date: date, id: nextId)
+    private func getPoint(_ asset: ALAsset?) -> Point? {
+        var res: Point? = nil
+        if let metadata = asset!.defaultRepresentation().metadata() {
+            if let gps = metadata["{GPS}"] as? Dictionary<String,Any>{
+                if let latitude = gps["Latitude"] as? Double, let longitude = gps["Longitude"] as? Double {
+                    res = Point(latitude: Int(latitude*1E5), longitude: Int(longitude*1E5))
+                }
+            }
+        }
+        return res
+    }
+    
+    private func addPhoto(image: UIImage, date: Date, point: Point?) {
+        let photo = Photo(image: image, date: date, id: nextId, point: point)
         nextId += 1
         photos.append(photo)
         images.reloadData()
@@ -161,7 +172,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func addPhoto(image: UIImage) {
-        addPhoto(image: image, date: Date())
+        addPhoto(image: image, date: Date(), point: nil)
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
@@ -172,14 +183,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 assetsLibrary.asset(for: url, resultBlock: {
                     (asset: ALAsset?) -> Void in
                     let date = self.getDate(asset)
-                    self.addPhoto(image: chosenImage, date: date)
+                    let assetPoint = self.getPoint(asset)
+                    let point = (assetPoint != nil) ? assetPoint : (picker.sourceType == .camera) ? self.location : nil
+                    self.addPhoto(image: chosenImage, date: date, point: point)
                 }, failureBlock: {
                     (error: Error?) -> Void in
                     self.addPhoto(image: chosenImage)
                 })
             }
             else {
-                self.addPhoto(image: chosenImage)
+                let point = (picker.sourceType == .camera) ? self.location : nil
+                self.addPhoto(image: chosenImage, date: Date(), point: point)
             }
         }
     }
@@ -242,7 +256,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func disconnect (sender: UIButton) {
-        if getCredentials() == nil {
+        if getAutoLogin() == nil {
             performSegue(withIdentifier: "Login", sender: nil)
         }
         else {
@@ -271,6 +285,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    var location: Point?
     var gpsAddress: Address?
     var forcedAddress: Address?
     var gpsError: String?
@@ -317,13 +332,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var sending = false
     
     @IBAction func sendPhotos(sender: UIButton) {
-        if let credentials = getCredentials() {
+        if let autoLogin = getAutoLogin() {
             if let address = forcedAddress != nil ? forcedAddress : gpsAddress {
                 if photos.count != 0 {
                     sending = true
                     updateSendButton()
                     var finished = false
-                    send(credentials: credentials, address: address, photos: self.photos) {
+                    uploadAndReport(autoLogin: autoLogin, address: address, photos: self.photos) {
+                    /*send(credentials: credentials, address: address, photos: self.photos) {*/
                         (type: ProgressType, message: String) in
                         if !finished {
                             switch type {

@@ -38,6 +38,7 @@
 		7BC98F881E22E7A40039B1E6 /* LEOWebDAVUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F791E22E7A40039B1E6 /* LEOWebDAVUtility.m */; };
 		7BC98F8A1E22E85C0039B1E6 /* WebDavAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */; };
 		7BCF65B21E2026B5009398E2 /* Chars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCF65B11E2026B5009398E2 /* Chars.swift */; };
+		7BF2E8791E856C85001A6A60 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF2E8781E856C85001A6A60 /* Server.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +46,7 @@
 		7B0655681E31043A00E6E072 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		7B27235E1E1E59F1009B7FA2 /* streets.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = streets.csv; sourceTree = "<group>"; };
 		7B2723601E1E5A7B009B7FA2 /* RequestOpenDataParisFr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestOpenDataParisFr.swift; sourceTree = "<group>"; };
-		7B317B531DF8C09200AE1CEC /* GCUM Fisher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GCUM Fisher.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B317B531DF8C09200AE1CEC /* Paris parking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Paris parking.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B317B561DF8C09200AE1CEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B317B581DF8C09200AE1CEC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7B317B5B1DF8C09200AE1CEC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		7BC98F791E22E7A40039B1E6 /* LEOWebDAVUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEOWebDAVUtility.m; sourceTree = "<group>"; };
 		7BC98F891E22E85C0039B1E6 /* WebDavAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavAccess.swift; sourceTree = "<group>"; };
 		7BCF65B11E2026B5009398E2 /* Chars.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chars.swift; sourceTree = "<group>"; };
+		7BF2E8781E856C85001A6A60 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +118,7 @@
 		7B317B541DF8C09200AE1CEC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7B317B531DF8C09200AE1CEC /* GCUM Fisher.app */,
+				7B317B531DF8C09200AE1CEC /* Paris parking.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +143,7 @@
 				7B36AB351E258CE0000FF8F0 /* SendPhotos.swift */,
 				7B0655661E2F962600E6E072 /* LoginViewController.swift */,
 				7B0655681E31043A00E6E072 /* SettingsViewController.swift */,
+				7BF2E8781E856C85001A6A60 /* Server.swift */,
 			);
 			path = "GCUM Fisher";
 			sourceTree = "<group>";
@@ -201,7 +204,7 @@
 			);
 			name = "GCUM Fisher";
 			productName = "GCUM Fisher";
-			productReference = 7B317B531DF8C09200AE1CEC /* GCUM Fisher.app */;
+			productReference = 7B317B531DF8C09200AE1CEC /* Paris parking.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -273,6 +276,7 @@
 				7B5760F11E1DACE1004452FD /* Address.swift in Sources */,
 				7BC98F821E22E7A40039B1E6 /* LEOWebDAVMoveRequest.m in Sources */,
 				7BC98F7E1E22E7A40039B1E6 /* LEOWebDAVDeleteRequest.m in Sources */,
+				7BF2E8791E856C85001A6A60 /* Server.swift in Sources */,
 				7BC98F831E22E7A40039B1E6 /* LEOWebDAVParser.m in Sources */,
 				7BC98F881E22E7A40039B1E6 /* LEOWebDAVUtility.m in Sources */,
 				7BC98F8A1E22E85C0039B1E6 /* WebDavAccess.swift in Sources */,
@@ -415,7 +419,7 @@
 				INFOPLIST_FILE = "GCUM Fisher/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "glullien.fr.GCUM-Fisher";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Paris parking";
 				SWIFT_OBJC_BRIDGING_HEADER = "GCUM Fisher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -431,7 +435,7 @@
 				INFOPLIST_FILE = "GCUM Fisher/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "glullien.fr.GCUM-Fisher";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Paris parking";
 				SWIFT_OBJC_BRIDGING_HEADER = "GCUM Fisher-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};

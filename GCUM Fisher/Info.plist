@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pour récupérer un GCUM archivé</string>
+	<string>Pour récupérer une photo archivée</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Pour prendre le GCUM en photo</string>
+	<string>Pour prendre une photo</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Pour connaitre la rue</string>
 	<key>NSLocationAlwaysUsageDescription</key>

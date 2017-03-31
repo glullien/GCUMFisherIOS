@@ -23,8 +23,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var locationManager: CLLocationManager!
     
-    var geoCoder: CLGeocoder!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         images.delegate = self
@@ -35,8 +33,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        
-        geoCoder = CLGeocoder()
         
         updateSendButton()
         
@@ -283,6 +279,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             updatePositionText()
             updateSendButton()
         }
+    }
+    
+    @IBAction func showList(sender: UIButton) {
+        performSegue(withIdentifier: "ShowList", sender: nil)
+    }
+    
+    @IBAction func showMap(sender: UIButton) {
+        performSegue(withIdentifier: "ShowMap", sender: nil)
     }
     
     var location: Point?

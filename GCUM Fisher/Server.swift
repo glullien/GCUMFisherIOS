@@ -7,14 +7,13 @@
 //
 
 import Foundation
-//import MobileCoreServices
 import UIKit
 
 let baseUrl = "https://www.gcum.lol/"
 //let baseUrl = "http://192.168.1.13:8080/"
 //let baseUrl = "http://192.168.62.233:8080/"
 
-private func returnError (_ error: String, completionHandler: @escaping ([String:Any]?, String?) -> Swift.Void) {
+private func returnError<R> (_ error: String, completionHandler: @escaping (R?, String?) -> Swift.Void) {
     DispatchQueue.main.async {
         completionHandler(nil,error)
     }
@@ -38,18 +37,6 @@ extension Data {
         }
     }
 }
-
-/*func mimeType(for path: String) -> String {
- let url = NSURL(fileURLWithPath: path)
- let pathExtension = url.pathExtension
- 
- if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension! as NSString, nil)?.takeRetainedValue() {
- if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?.takeRetainedValue() {
- return mimetype as String
- }
- }
- return "application/octet-stream";
- }*/
 
 func generateBoundaryString() -> String {
     return "Boundary-\(NSUUID().uuidString)"
@@ -129,13 +116,22 @@ private func jsonRequest (with request: URLRequest, completionHandler: @escaping
     task.resume()
 }
 
+private func getRequest (servlet: String, params: String) -> URLRequest {
+    let url = URL(string: "\(baseUrl)\(servlet)")!
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.httpBody = params.data(using: String.Encoding.utf8)
+    request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+    return request
+}
+
 private func jsonRequest (servlet: String, params: String, completionHandler: @escaping ([String:Any]?, String?) -> Swift.Void) {
     let url = URL(string: "\(baseUrl)\(servlet)")!
     var request = URLRequest(url:url)
     request.httpMethod = "POST"
     request.httpBody = params.data(using: String.Encoding.utf8)
     request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
-    jsonRequest(with: request, completionHandler: completionHandler)
+    jsonRequest(with: getRequest(servlet: servlet, params: params), completionHandler: completionHandler)
 }
 
 struct AutoLogin {
@@ -234,6 +230,122 @@ func searchAddress (pattern: String, nb: Int, completionHandler: @escaping ([Add
             completionHandler(nil, "bad format")
         }
     }
+}
+
+enum CoordinatesSource: String {
+    case Street
+    case Device
+}
+
+struct Coordinates {
+    var source: CoordinatesSource
+    var point: Point
+    init(source: CoordinatesSource, point: Point) {
+        self.source = source
+        self.point = point
+    }
+}
+struct Location {
+    var address: Address
+    var coordinates: Coordinates
+    init(address: Address, coordinates: Coordinates) {
+        self.address = address
+        self.coordinates = coordinates
+    }
+}
+struct ServerPhoto {
+    var id: String
+    var date: String
+    var time: String?
+    var location: Location
+    var username: String?
+    var likesCount: Int
+    var isLiked: Bool
+    init(id: String, date: String, time: String?, location: Location, username: String?, likesCount: Int, isLiked: Bool) {
+        self.id = id
+        self.date = date
+        self.time = time
+        self.location = location
+        self.username = username
+        self.likesCount = likesCount
+        self.isLiked = isLiked
+    }
+}
+struct ListResult {
+    var photos: [ServerPhoto]
+    var nbAfter: Int
+    init(photos: [ServerPhoto], nbAfter: Int) {
+        self.photos = photos
+        self.nbAfter = nbAfter
+    }
+}
+
+func getList (number: Int, start: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
+    jsonRequest(servlet: "getList", params: "number=\(number)&district=All&sort=date") {
+        (json, error) in
+        if error != nil {
+            completionHandler(nil, error)
+        }
+        else {
+            var photos = [ServerPhoto]()
+            for photo in json?["photos"] as! [[String: Any]] {
+                let address = Address(street: photo["street"] as! String, district: photo["district"] as! Int)
+                let point = Point(latitude: photo["latitude"] as! Int, longitude: photo["longitude"] as! Int)
+                let source = CoordinatesSource(rawValue: photo["locationSource"] as! String)
+                let coordinates = Coordinates(source: source!, point: point)
+                let location = Location(address: address, coordinates: coordinates)
+                photos.append(ServerPhoto(
+                    id: photo["id"] as! String,
+                    date: photo["date"] as! String,
+                    time: photo["time"] as? String,
+                    location: location,
+                    username: photo["username"] as? String,
+                    likesCount: photo["likesCount"] as! Int,
+                    isLiked: photo["isLiked"] as! Bool))
+            }
+            completionHandler(ListResult(photos: photos, nbAfter: json?["nbAfter"] as! Int),nil)
+        }
+    }
+}
+
+func getPoints (completionHandler: @escaping ([Point]?, String?) -> Swift.Void) {
+    jsonRequest(servlet: "getPoints", params: "zone=All&locationSources=Street,Device&timeFrame=All&authors=-All-") {
+        (json, error) in
+        if error != nil {
+            completionHandler(nil, error)
+        }
+        else {
+            var points = [Point]()
+            for point in json?["photos"] as! [[String: Any]] {
+                points.append(Point(latitude: point["latitude"] as! Int, longitude: point["longitude"] as! Int))
+            }
+            completionHandler(points,nil)
+        }
+    }
+}
+    
+func getPhotoURL(id: String, maxWidth: Int, maxHeight: Int) -> URL {
+    return URL(string: "\(baseUrl)getPhoto?id=\(id)&maxWidth=\(maxWidth)&maxHeight=\(maxHeight)")!
+}
+
+func getPhoto (id: String, maxWidth: Int, maxHeight: Int, completionHandler: @escaping (UIImage?, String?) -> Swift.Void) {
+    let request = getRequest(servlet: "getPhoto", params: "id=\(id)&maxWidth=\(maxWidth)&maxHeight=\(maxHeight)")
+    let session = URLSession.shared
+    let task = session.dataTask(with: request) {
+        (data, response, error) in
+        if let error = error  {
+            returnError(error.localizedDescription, completionHandler: completionHandler)
+            return
+        }
+        guard let data = data, let _:URLResponse = response else {
+            returnError("No error but no data", completionHandler: completionHandler)
+            return
+        }
+        DispatchQueue.main.async {
+            completionHandler(UIImage(data: data), nil)
+        }
+    }
+    task.resume()
 }
 
 func uploadAndReport(autoLogin: AutoLogin, address: Address, photos: [Photo], completionHandler: @escaping (ProgressType, String) -> Swift.Void) {

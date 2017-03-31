@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapKit
 
 struct Address {
     var street: String
@@ -23,6 +24,10 @@ struct Address {
 private func toRadian (_ degree: Int) -> Double {
     return (Double.pi * Double (degree) * 1E-5) / (180);
 }
+
+private func format(_ degree: Int) -> String {
+    return String(format: "%.5f", Double(degree)*1E-5)
+}
 struct Point {
     var latitude: Int
     var longitude: Int
@@ -30,7 +35,12 @@ struct Point {
         self.latitude = latitude
         self.longitude = longitude
     }
-
+    
+    func getCLLocationCoordinate2D () -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: Double(latitude)*1E-5, longitude: Double(longitude)*1E-5)
+    }
+    
+    
     func distance(from: Point) -> Int {
         let R = Double(6378000);
         let latA = toRadian(latitude);
@@ -38,5 +48,9 @@ struct Point {
         let latB = toRadian(from.latitude);
         let lonB = toRadian(from.longitude);
         return Int(R * (Double.pi / 2 - asin(sin(latB) * sin(latA) + cos(lonB - lonA) * cos(latB) * cos(latA))));
+    }
+    
+    func fullName () -> String {
+        return "\(format(latitude)) °N / \(format(longitude)) °E"
     }
 }

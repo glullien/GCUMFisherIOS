@@ -281,6 +281,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "ShowList") {
+            if let destination = segue.destination as? ListViewController {
+                destination.point = nil
+            }
+        }
+    }
+    
     @IBAction func showList(sender: UIButton) {
         performSegue(withIdentifier: "ShowList", sender: nil)
     }

@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-let baseUrl = "https://www.gcum.lol/"
-//let baseUrl = "http://192.168.1.13:8080/"
+//let baseUrl = "https://www.gcum.lol/"
+let baseUrl = "http://192.168.1.13:8080/"
 //let baseUrl = "http://192.168.62.233:8080/"
 
 private func returnError<R> (_ error: String, completionHandler: @escaping (R?, String?) -> Swift.Void) {
@@ -280,6 +280,22 @@ struct ListResult {
     }
 }
 
+private func getServerPhoto(_ photo: [String: Any]) -> ServerPhoto {
+    let address = Address(street: photo["street"] as! String, district: photo["district"] as! Int)
+    let point = Point(latitude: photo["latitude"] as! Int, longitude: photo["longitude"] as! Int)
+    let source = CoordinatesSource(rawValue: photo["locationSource"] as! String)
+    let coordinates = Coordinates(source: source!, point: point)
+    let location = Location(address: address, coordinates: coordinates)
+    return ServerPhoto(
+        id: photo["id"] as! String,
+        date: photo["date"] as! String,
+        time: photo["time"] as? String,
+        location: location,
+        username: photo["username"] as? String,
+        likesCount: photo["likesCount"] as! Int,
+        isLiked: photo["isLiked"] as! Bool)
+}
+
 func getList (number: Int, start: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
     jsonRequest(servlet: "getList", params: "number=\(number)&district=All&sort=date") {
         (json, error) in
@@ -289,35 +305,62 @@ func getList (number: Int, start: String?, completionHandler: @escaping (ListRes
         else {
             var photos = [ServerPhoto]()
             for photo in json?["photos"] as! [[String: Any]] {
-                let address = Address(street: photo["street"] as! String, district: photo["district"] as! Int)
-                let point = Point(latitude: photo["latitude"] as! Int, longitude: photo["longitude"] as! Int)
-                let source = CoordinatesSource(rawValue: photo["locationSource"] as! String)
-                let coordinates = Coordinates(source: source!, point: point)
-                let location = Location(address: address, coordinates: coordinates)
-                photos.append(ServerPhoto(
-                    id: photo["id"] as! String,
-                    date: photo["date"] as! String,
-                    time: photo["time"] as? String,
-                    location: location,
-                    username: photo["username"] as? String,
-                    likesCount: photo["likesCount"] as! Int,
-                    isLiked: photo["isLiked"] as! Bool))
+                photos.append(getServerPhoto(photo))
             }
             completionHandler(ListResult(photos: photos, nbAfter: json?["nbAfter"] as! Int),nil)
         }
     }
 }
 
-func getPoints (completionHandler: @escaping ([Point]?, String?) -> Swift.Void) {
+func getPointInfo (point: Point, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
+    jsonRequest(servlet: "getPointInfo", params: "latitude=\(point.latitude)&longitude=\(point.longitude)&timeFrame=All&locationSources=Street,Device&authors=-All-") {
+        (json, error) in
+        if error != nil {
+            completionHandler(nil, error)
+        }
+        else {
+            var photos = [ServerPhoto]()
+            for photo in json?["photos"] as! [[String: Any]] {
+                photos.append(getServerPhoto(photo))
+            }
+            completionHandler(ListResult(photos: photos, nbAfter: 0),nil)
+        }
+    }
+}
+
+struct ServerPoint {
+    let point: Point
+    let street: String
+    let district: Int
+    let dates: String
+    let nbPhotos: Int
+    let latestId: String
+    init (point: Point, street: String, district: Int, dates: String, nbPhotos: Int, latestId: String) {
+        self.point = point
+        self.street = street
+        self.district = district
+        self.dates = dates
+        self.nbPhotos = nbPhotos
+        self.latestId = latestId
+    }
+}
+
+func getPoints (completionHandler: @escaping ([ServerPoint]?, String?) -> Swift.Void) {
     jsonRequest(servlet: "getPoints", params: "zone=All&locationSources=Street,Device&timeFrame=All&authors=-All-") {
         (json, error) in
         if error != nil {
             completionHandler(nil, error)
         }
         else {
-            var points = [Point]()
+            var points = [ServerPoint]()
             for point in json?["photos"] as! [[String: Any]] {
-                points.append(Point(latitude: point["latitude"] as! Int, longitude: point["longitude"] as! Int))
+                points.append(ServerPoint(
+                    point: Point(latitude: point["latitude"] as! Int, longitude: point["longitude"] as! Int),
+                    street: point["street"] as! String,
+                    district: point["district"] as! Int,
+                    dates: point["dates"] as! String,
+                    nbPhotos: point["nbPhotos"] as! Int,
+                    latestId: point["latestId"] as! String))
             }
             completionHandler(points,nil)
         }

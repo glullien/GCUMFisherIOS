@@ -459,7 +459,6 @@
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HPN-6d-fep">
                                                     <rect key="frame" x="8" y="37" width="272" height="176"/>
-                                                    <color key="backgroundColor" red="1" green="0.21670570459629623" blue="0.24927041100822134" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="gps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qEM-yS-X3M">
                                                     <rect key="frame" x="8" y="250" width="192" height="21"/>
@@ -550,7 +549,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UBr-nQ-5jd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1897.5" y="-725"/>
+            <point key="canvasLocation" x="2946" y="-531"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="ZlD-1n-OxO">
@@ -592,11 +591,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="ICE-EP-vqY" id="3t7-jk-z2G"/>
+                        <segue destination="fgi-SU-LuG" kind="show" identifier="ShowListForPoint" id="VEp-Zo-FJR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cJZ-8o-2U9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2739.375" y="-246.25"/>
+            <point key="canvasLocation" x="1939" y="-781"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="uCK-JY-0Df">
@@ -626,4 +626,7 @@
         <image name="Settings" width="25" height="25"/>
         <image name="Trash" width="25" height="25"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="VEp-Zo-FJR"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -24,6 +24,8 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var listView : UITableView!
     @IBOutlet weak var moreButton : UIButton!
     
+    var point: Point?
+    
     private var photos: [ServerPhoto]? = nil
     
     override func viewDidLoad() {
@@ -31,7 +33,7 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
         listView.delegate = self
         listView.dataSource = self
         
-        getList(number: 5, start: nil) {
+        let afterRequest: (ListResult?, String?) -> Swift.Void = {
             list, error in
             if let error = error {
                 let alert = UIAlertController(title: "Erreur", message: error, preferredStyle: UIAlertControllerStyle.alert)
@@ -43,6 +45,13 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
                 self.photos = list.photos
                 self.listView.reloadData()
             }
+        }
+
+        if let point = point {
+            getPointInfo(point: point, completionHandler: afterRequest)
+        }
+        else {
+            getList(number: 5, start: nil, completionHandler: afterRequest)
         }
     }
     
@@ -61,8 +70,6 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
         if let photoView = cell.photo {
             do {
                 photoView.image = try UIImage(data: Data(contentsOf: getPhotoURL(id: photo.id, maxWidth: Int(photoView.frame.width), maxHeight: Int(photoView.frame.height))))
-                //photoView.image = try UIImage(data: Data(contentsOf: getPhotoURL(id: photo.id, maxWidth: Int(listView?.frame.size.width ?? 10), maxHeight: 176)))
-                print(photoView.frame)
             } catch {
                 print("ERRROR")
             }

@@ -351,7 +351,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                     updateSendButton()
                     var finished = false
                     uploadAndReport(autoLogin: autoLogin, address: address, photos: self.photos) {
-                    /*send(credentials: credentials, address: address, photos: self.photos) {*/
                         (type: ProgressType, message: String) in
                         if !finished {
                             switch type {

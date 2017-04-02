@@ -46,7 +46,7 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
                 self.listView.reloadData()
             }
         }
-
+        
         if let point = point {
             getPointInfo(point: point, completionHandler: afterRequest)
         }
@@ -75,6 +75,18 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "ShowPhoto") {
+            if let destination = segue.destination as? PhotoViewController, let photo = sender as? ServerPhoto {
+                destination.photo = photo
+            }
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ShowPhoto", sender: photos![indexPath.row])
     }
     
 }

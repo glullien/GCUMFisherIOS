@@ -254,14 +254,16 @@ struct Location {
     }
 }
 struct ServerPhoto {
-    var id: String
-    var date: String
-    var time: String?
-    var location: Location
-    var username: String?
-    var likesCount: Int
-    var isLiked: Bool
-    init(id: String, date: String, time: String?, location: Location, username: String?, likesCount: Int, isLiked: Bool) {
+    let id: String
+    let date: String
+    let time: String?
+    let location: Location
+    let username: String?
+    let likesCount: Int
+    let isLiked: Bool
+    let width: Int
+    let height: Int
+    init(id: String, date: String, time: String?, location: Location, username: String?, likesCount: Int, isLiked: Bool, width: Int, height: Int) {
         self.id = id
         self.date = date
         self.time = time
@@ -269,8 +271,14 @@ struct ServerPhoto {
         self.username = username
         self.likesCount = likesCount
         self.isLiked = isLiked
+        self.width = width
+        self.height = height
+    }
+    func size() -> String {
+        return "\(width)x\(height)"
     }
 }
+
 struct ListResult {
     var photos: [ServerPhoto]
     var nbAfter: Int
@@ -293,7 +301,9 @@ private func getServerPhoto(_ photo: [String: Any]) -> ServerPhoto {
         location: location,
         username: photo["username"] as? String,
         likesCount: photo["likesCount"] as! Int,
-        isLiked: photo["isLiked"] as! Bool)
+        isLiked: photo["isLiked"] as! Bool,
+        width: photo["width"] as! Int,
+        height: photo["height"] as! Int)
 }
 
 func getList (number: Int, start: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
@@ -367,6 +377,10 @@ func getPoints (completionHandler: @escaping ([ServerPoint]?, String?) -> Swift.
     }
 }
     
+func getPhotoURL(id: String) -> URL {
+    return URL(string: "\(baseUrl)getPhoto?id=\(id)")!
+}
+
 func getPhotoURL(id: String, maxWidth: Int, maxHeight: Int) -> URL {
     return URL(string: "\(baseUrl)getPhoto?id=\(id)&maxWidth=\(maxWidth)&maxHeight=\(maxHeight)")!
 }
@@ -432,9 +446,9 @@ func uploadAndReport(autoLogin: AutoLogin, address: Address, photo: Photo, compl
         parameters["longitude"] = String(point.longitude)
     }
     
-    let data = UIImageJPEGRepresentation(photo.image, 0.9)
+    let data = photo.getData(size: getImageSize(), quality: getImageQuality())
     do {
-        let request = try createRequest("uploadAndReport", with: parameters, data: data!)
+        let request = try createRequest("uploadAndReport", with: parameters, data: data)
         jsonRequest(with: request) {
             (result, error) in
             if let error = error {

@@ -10,8 +10,8 @@ import Foundation
 import MapKit
 
 struct Address {
-    var street: String
-    var district: Int
+    let street: String
+    let district: Int
     init (street: String, district: Int) {
         self.street = street
         self.district = district

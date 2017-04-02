@@ -25,7 +25,7 @@ class PhotosAnnotation : NSObject, MKAnnotation {
     }
     var subtitle: String? {
         get {
-            return point.dates
+            return "\(point.dates) : \(point.nbPhotos) photos"
         }
     }
     init(_ point: ServerPoint){
@@ -55,9 +55,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             }
             else if let points = points {
                 for point in points {
-                    /*let annotation = MKPointAnnotation()
-                     annotation.coordinate = point.getCLLocationCoordinate2D()
-                     annotation.title = point.fullName()*/
                     self.mapView.addAnnotation(PhotosAnnotation(point))
                 }
             }

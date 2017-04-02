@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-//let baseUrl = "https://www.gcum.lol/"
-let baseUrl = "http://192.168.1.13:8080/"
+let baseUrl = "https://www.gcum.lol/"
+//let baseUrl = "http://192.168.1.13:8080/"
 //let baseUrl = "http://192.168.62.233:8080/"
 
 private func returnError<R> (_ error: String, completionHandler: @escaping (R?, String?) -> Swift.Void) {
@@ -213,7 +213,7 @@ func searchClosest (latitude: Int, longitude: Int, nb: Int, completionHandler: @
 }
 
 func searchAddress (pattern: String, nb: Int, completionHandler: @escaping ([Address]?, String?) -> Swift.Void) {
-    let patternEncoded = pattern.addingPercentEncodingForQueryParameter()
+    let patternEncoded = pattern.addingPercentEncodingForQueryParameter()!
     jsonRequest(servlet: "searchAddress", params: "pattern=\(patternEncoded)&nbAnswers=\(nb)") {
         (json, error) in
         if error != nil {

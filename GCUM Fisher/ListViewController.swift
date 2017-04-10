@@ -28,6 +28,23 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
     
     private var photos: [ServerPhoto]? = nil
     
+    func display(error: String) {
+        let alert = UIAlertController(title: "Erreur", message: error, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func updateMore(nbAfter: Int) {
+        if nbAfter == 0 {
+            self.moreButton.isEnabled = false
+            self.moreButton.setTitle("Plus", for: .disabled)
+        }
+        else {
+            self.moreButton.isEnabled = true
+            self.moreButton.setTitle("Plus (\(nbAfter))", for: .normal)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         listView.delegate = self
@@ -36,12 +53,10 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
         let afterRequest: (ListResult?, String?) -> Swift.Void = {
             list, error in
             if let error = error {
-                let alert = UIAlertController(title: "Erreur", message: error, preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.display(error: error)
             }
             else if let list = list {
-                self.moreButton.setTitle("Plus (\(list.nbAfter))", for: .normal)
+                self.updateMore(nbAfter: list.nbAfter)
                 self.photos = list.photos
                 self.listView.reloadData()
             }
@@ -51,7 +66,7 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
             getPointInfo(point: point, completionHandler: afterRequest)
         }
         else {
-            getList(number: 5, start: nil, completionHandler: afterRequest)
+            getList(number: 5, after: nil, completionHandler: afterRequest)
         }
     }
     
@@ -89,4 +104,19 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
         performSegue(withIdentifier: "ShowPhoto", sender: photos![indexPath.row])
     }
     
+    @IBAction func more (sender: UIButton) {
+        if point == nil {
+            getList(number: 5, after: photos?.last?.id) {
+                list, error in
+                if let error = error {
+                    self.display(error: error)
+                }
+                else if let list = list {
+                    self.updateMore(nbAfter: list.nbAfter)
+                    self.photos?.append(contentsOf: list.photos)
+                    self.listView.reloadData()
+                }
+            }
+        }
+    }
 }

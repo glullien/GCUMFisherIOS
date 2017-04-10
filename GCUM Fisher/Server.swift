@@ -19,14 +19,14 @@ private func returnError<R> (_ error: String, completionHandler: @escaping (R?, 
     }
 }
 private extension String {
-    func addingPercentEncodingForQueryParameter() -> String? {
+    func addingPercentEncodingForQueryParameter() -> String {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         
         var allowedCharacterSet = CharacterSet.urlQueryAllowed
         allowedCharacterSet.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
         
-        return addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)
+        return addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
     }
 }
 
@@ -134,6 +134,10 @@ private func jsonRequest (servlet: String, params: String, completionHandler: @e
     jsonRequest(with: getRequest(servlet: servlet, params: params), completionHandler: completionHandler)
 }
 
+private func jsonRequest (servlet: String, params: [String:Any], completionHandler: @escaping ([String:Any]?, String?) -> Swift.Void) {
+    return jsonRequest(servlet: servlet, params: url(from: params), completionHandler: completionHandler)
+}
+
 struct AutoLogin {
     var username: String
     var password: String
@@ -178,7 +182,7 @@ func getAutoLogin () -> AutoLogin? {
 
 func getAutoLogin(username:String, password: String, String email: String? = nil, register: Bool = false, completionHandler: @escaping (AutoLogin?, String?) -> Swift.Void) {
     var params = "username=\(username)&password=\(password)&register=\(register)"
-    if email != nil {
+    if let email = email {
         params += "&email=\(email)"
     }
     jsonRequest(servlet: "getAutoLogin", params: params) {
@@ -213,7 +217,7 @@ func searchClosest (latitude: Int, longitude: Int, nb: Int, completionHandler: @
 }
 
 func searchAddress (pattern: String, nb: Int, completionHandler: @escaping ([Address]?, String?) -> Swift.Void) {
-    let patternEncoded = pattern.addingPercentEncodingForQueryParameter()!
+    let patternEncoded = pattern.addingPercentEncodingForQueryParameter()
     jsonRequest(servlet: "searchAddress", params: "pattern=\(patternEncoded)&nbAnswers=\(nb)") {
         (json, error) in
         if error != nil {
@@ -306,8 +310,27 @@ private func getServerPhoto(_ photo: [String: Any]) -> ServerPhoto {
         height: photo["height"] as! Int)
 }
 
-func getList (number: Int, start: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
-    jsonRequest(servlet: "getList", params: "number=\(number)&district=All&sort=date") {
+private func url (key: String, value: Any) -> String {
+    let encodedValue = "\(value)".addingPercentEncodingForQueryParameter()
+    return "\(key)=\(encodedValue)"
+}
+
+private func url(from: [String:Any]) -> String {
+    let res = from.map { key, value -> String in url(key: key, value: value) }
+    return res.joined(separator: "&")
+}
+
+func getList (number: Int, after: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
+    var parameters: [String: Any] = [
+        "number": String(number),
+        "district": "All",
+        "sort": "date"]
+    if let after = after {
+        parameters["after"] = after
+    }
+    print ("test \(url(from: parameters))")
+
+    jsonRequest(servlet: "getList", params: parameters) {
         (json, error) in
         if error != nil {
             completionHandler(nil, error)

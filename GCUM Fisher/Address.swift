@@ -47,7 +47,9 @@ struct Point {
         let lonA = toRadian(longitude);
         let latB = toRadian(from.latitude);
         let lonB = toRadian(from.longitude);
-        return Int(R * (Double.pi / 2 - asin(sin(latB) * sin(latA) + cos(lonB - lonA) * cos(latB) * cos(latA))));
+        let a = sin(latB) * sin(latA) + cos(lonB - lonA) * cos(latB) * cos(latA)
+        let d = Double.pi / 2 - asin(min (1.0, max (-1.0, a)))
+        return Int(R * d);
     }
     
     func fullName () -> String {

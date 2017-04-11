@@ -10,13 +10,49 @@ import Foundation
 import UIKit
 
 class ListViewCell : UITableViewCell {
+    var photo: ServerPhoto?
+    
     @IBOutlet weak var username: UILabel!
-    @IBOutlet weak var like: UILabel!
+    @IBOutlet weak var like: UIButton!
     @IBOutlet weak var address: UILabel!
     @IBOutlet weak var gps: UILabel!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var time: UILabel!
-    @IBOutlet weak var photo: UIImageView!
+    @IBOutlet weak var photoView: UIImageView!
+    
+    func setPhoto (_ photo: ServerPhoto) {
+        self.photo = photo
+        username.text = photo.username
+        address.text = photo.location.address.fullName()
+        gps.text = photo.location.coordinates.point.fullName()
+        date.text = photo.date
+        time.text = photo.time ?? ""
+        like.setLike(photo: photo)
+        do {
+            let size = photoView.frame
+            let data = try Data(contentsOf: getPhotoURL(id: photo.id, maxWidth: Int(size.width),maxHeight: Int(size.height)))
+            photoView.image = UIImage(data: data)
+        } catch {
+            print("ERROR")
+        }
+    }
+    
+    @IBAction func like (sender: UIButton) {
+        if let autoLogin = getAutoLogin(), let photo = photo {
+            self.like.setTitle("⏱", for: .normal)
+            toggleLike (autoLogin: autoLogin, photoId: photo.id) {
+                result, error in
+                if let error = error {
+                    self.like.isEnabled = false
+                    self.like.setTitle(error, for: .disabled)
+                }
+                else if let result = result {
+                    self.like.setLike(likesCount: result.likesCount, isLiked: result.isLiked)
+                    self.photo?.update(from: result)
+                }
+            }
+        }
+    }
 }
 
 class ListViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -62,12 +98,18 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
         
+        let autoLogin = getAutoLogin()
         if let point = point {
-            getPointInfo(point: point, completionHandler: afterRequest)
+            getPointInfo(autoLogin: autoLogin, point: point, completionHandler: afterRequest)
         }
         else {
-            getList(number: 5, after: nil, completionHandler: afterRequest)
+            getList(autoLogin: autoLogin, number: 5, after: nil, completionHandler: afterRequest)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.listView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,18 +119,7 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = listView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ListViewCell
         let photo = photos![indexPath.row]
-        cell.username?.text = photo.username
-        cell.address?.text = photo.location.address.fullName()
-        cell.gps?.text = photo.location.coordinates.point.fullName()
-        cell.date?.text = photo.date
-        cell.time?.text = photo.time ?? ""
-        if let photoView = cell.photo {
-            do {
-                photoView.image = try UIImage(data: Data(contentsOf: getPhotoURL(id: photo.id, maxWidth: Int(photoView.frame.width), maxHeight: Int(photoView.frame.height))))
-            } catch {
-                print("ERRROR")
-            }
-        }
+        cell.setPhoto(photo)
         return cell
     }
     
@@ -106,7 +137,7 @@ class ListViewController : UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func more (sender: UIButton) {
         if point == nil {
-            getList(number: 5, after: photos?.last?.id) {
+            getList(autoLogin: getAutoLogin(), number: 5, after: photos?.last?.id) {
                 list, error in
                 if let error = error {
                     self.display(error: error)

@@ -139,10 +139,10 @@ private func jsonRequest (servlet: String, params: [String:Any], completionHandl
 }
 
 struct AutoLogin {
-    var username: String
-    var password: String
-    var autoLogin: String
-    var validTo: String
+    let username: String
+    let password: String
+    let autoLogin: String
+    let validTo: String
     init (username: String, password: String, autoLogin: String, validTo: String) {
         self.username = username
         self.password = password
@@ -257,26 +257,30 @@ struct Location {
         self.coordinates = coordinates
     }
 }
-struct ServerPhoto {
+class ServerPhoto {
     let id: String
     let date: String
     let time: String?
     let location: Location
     let username: String?
-    let likesCount: Int
-    let isLiked: Bool
+    var likesCount: Int
+    var isLiked: Bool
     let width: Int
     let height: Int
     init(id: String, date: String, time: String?, location: Location, username: String?, likesCount: Int, isLiked: Bool, width: Int, height: Int) {
         self.id = id
         self.date = date
-        self.time = time
+        self.time = (time != "unknown") ? time : nil
         self.location = location
         self.username = username
         self.likesCount = likesCount
         self.isLiked = isLiked
         self.width = width
         self.height = height
+    }
+    func update(from: ToggleLikeResult) {
+        likesCount = from.likesCount
+        isLiked = from.isLiked
     }
     func size() -> String {
         return "\(width)x\(height)"
@@ -320,7 +324,7 @@ private func url(from: [String:Any]) -> String {
     return res.joined(separator: "&")
 }
 
-func getList (number: Int, after: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
+func getList (autoLogin: AutoLogin?, number: Int, after: String?, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
     var parameters: [String: Any] = [
         "number": String(number),
         "district": "All",
@@ -328,7 +332,9 @@ func getList (number: Int, after: String?, completionHandler: @escaping (ListRes
     if let after = after {
         parameters["after"] = after
     }
-    print ("test \(url(from: parameters))")
+    if let autoLogin = autoLogin {
+        parameters["autoLogin"] = autoLogin.autoLogin
+    }
 
     jsonRequest(servlet: "getList", params: parameters) {
         (json, error) in
@@ -345,8 +351,18 @@ func getList (number: Int, after: String?, completionHandler: @escaping (ListRes
     }
 }
 
-func getPointInfo (point: Point, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
-    jsonRequest(servlet: "getPointInfo", params: "latitude=\(point.latitude)&longitude=\(point.longitude)&timeFrame=All&locationSources=Street,Device&authors=-All-") {
+func getPointInfo (autoLogin: AutoLogin?, point: Point, completionHandler: @escaping (ListResult?, String?) -> Swift.Void) {
+    var parameters: [String: Any] = [
+        "latitude": point.latitude,
+        "longitude": point.longitude,
+        "timeFrame": "All",
+        "locationSources": "Street,Device",
+        "authors": "-All-"]
+    if let autoLogin = autoLogin {
+        parameters["autoLogin"] = autoLogin.autoLogin
+    }
+    
+    jsonRequest(servlet: "getPointInfo", params: parameters) {
         (json, error) in
         if error != nil {
             completionHandler(nil, error)
@@ -399,7 +415,31 @@ func getPoints (completionHandler: @escaping ([ServerPoint]?, String?) -> Swift.
         }
     }
 }
-    
+
+struct ToggleLikeResult {
+    let likesCount: Int
+    let isLiked: Bool
+    init (likesCount: Int, isLiked: Bool) {
+        self.likesCount = likesCount
+        self.isLiked = isLiked
+    }
+}
+
+func toggleLike(autoLogin: AutoLogin, photoId: String, completionHandler: @escaping (ToggleLikeResult?, String?) -> Swift.Void) {
+    let parameters: [String: Any] = [
+        "autoLogin": autoLogin.autoLogin,
+        "photoId": photoId]
+    jsonRequest(servlet: "toggleLike", params: parameters) {
+        (json, error) in
+        if error != nil {
+            completionHandler(nil, error)
+        }
+        else {
+            completionHandler(ToggleLikeResult(likesCount: json?["likesCount"] as! Int, isLiked: json?["isLiked"] as! Bool),nil)
+        }
+    }
+}
+
 func getPhotoURL(id: String) -> URL {
     return URL(string: "\(baseUrl)getPhoto?id=\(id)")!
 }

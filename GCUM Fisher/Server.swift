@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-let baseUrl = "https://www.gcum.lol/"
+let baseUrl = "https://www.parisestunparking.lol/"
 //let baseUrl = "http://192.168.1.13:8080/"
 //let baseUrl = "http://192.168.62.233:8080/"
 

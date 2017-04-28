@@ -17,6 +17,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var position : UILabel!
     @IBOutlet weak var actions : UILabel!
     @IBOutlet weak var sendButton : UIButton!
+    @IBOutlet weak var forceAddressButton : UIButton!
     
     var photos = [Photo]()
     var nextId = 0
@@ -276,6 +277,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         else {
             forcedAddress = nil
+            forceAddressButton.setBackgroundImage(UIImage(named: "EditPosition"), for: .normal)
             updatePositionText()
             updateSendButton()
         }
@@ -318,6 +320,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func forceAddress(_ address: Address) {
         forcedAddress = address
+        forceAddressButton.setBackgroundImage(UIImage(named: "Here"), for: .normal)
         updatePositionText()
         updateSendButton()
     }
